@@ -1,0 +1,40 @@
+"""
+Given an array arr of size n of non-negative integers and an integer sum, the task is to count all subsets of the given array with a sum equal to a given sum.
+
+Note: Answer can be very large, so, output answer modulo 109+7.
+
+Examples:
+
+Input: 
+n = 6, arr = [5, 2, 3, 10, 6, 8], sum = 10
+Output: 
+3
+Explanation: 
+{5, 2, 3}, {2, 8}, {10} are possible subsets.
+
+"""
+
+class Solution:
+    def countOfSubsets(self, ind, nums, target, dp):
+        if ind == 0:
+            if target == 0 and nums[0] == 0:
+                return 2
+            if target == 0 or nums[0] == target:
+                return 1
+            return 0
+        if dp[ind][target] != -1:
+            return dp[ind][target] % (10**9 + 7)
+        notInclude = self.countOfSubsets(ind-1, nums, target, dp)
+        include = 0
+        if target >= nums[ind]:
+            include = self.countOfSubsets(ind-1, nums, target-nums[ind],dp)
+        dp[ind][target] = (notInclude + include) % (10**9 + 7)
+        return dp[ind][target] % (10**9 + 7)
+        
+    def perfectSum(self, arr, n, sum):
+        # code here
+    # Write your code here.
+        dp = []
+        for i in range(n):
+            dp.append([-1] * (sum+1))
+        return self.countOfSubsets(n-1, arr, sum, dp) % (10**9 + 7)

@@ -1,0 +1,51 @@
+
+"""
+Given an array arr, partition it into two subsets(possibly empty) such that each element must belong to only one subset. Let the sum of the elements of these two subsets be S1 and S2. 
+Given a difference d, count the number of partitions in which S1 is greater than or equal to S2 and the difference between S1 and S2 is equal to d. Since the answer may be large return it modulo 109 + 7.
+
+Example 1:
+
+Input:
+n = 4
+d = 3
+arr[] =  { 5, 2, 6, 4}
+Output: 1
+Explanation:
+There is only one possible partition of this array. Partition : {6, 4}, {5, 2}. The subset difference between subset sum is: (6 + 4) - (5 + 2) = 3.
+"""
+
+from typing import List
+
+class Solution:
+    def countOfSubsets(self, nums, tar, dp):
+        n = len(nums)
+        if nums[0] == 0:
+            dp[0][0] = 2
+        else:
+            dp[0][0] = 1
+            
+        if nums[0] != 0 and nums[0] <= tar:
+            dp[0][nums[0]] = 1
+            
+        for ind in range(1, n):
+            for target in range(tar+1):
+                notInclude = dp[ind-1][target]
+                include = 0
+                if target >= nums[ind]:
+                    include = dp[ind-1][target-nums[ind]]
+                dp[ind][target] = (notInclude + include) 
+        return dp[n-1][tar] % (10 ** 9 + 7)
+               
+        
+    def countPartitions(self, n : int, d : int, arr : List[int]) -> int:
+        # code here
+        totalSum = 0
+        for ele in arr:
+            totalSum += ele
+        if (totalSum - d) < 0 or (totalSum -d) % 2:
+            return 0
+        targetSum = (totalSum -d) // 2
+        dp = []
+        for i in range(n):
+            dp.append([0] * (targetSum+1))
+        return self.countOfSubsets(arr, targetSum, dp)

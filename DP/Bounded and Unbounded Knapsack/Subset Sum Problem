@@ -1,0 +1,39 @@
+"""
+Given an array of non-negative integers, and a value sum, determine if there is a subset of the given set with sum equal to given sum. 
+
+
+Example 1:
+
+Input:
+N = 6
+arr[] = {3, 34, 4, 12, 5, 2}
+sum = 9
+Output: 1 
+Explanation: Here there exists a subset with
+sum = 9, 4+3+2 = 9.
+
+"""
+
+class Solution:
+    
+    def rec(self, ind, arr, target, dp):
+        if target == 0:
+            return True
+        if ind == 0:
+            return arr[ind] == target
+        if dp[ind][target] != -1:
+            return dp[ind][target]
+        pick = False
+        if target >= arr[ind]:
+            pick = self.rec(ind-1, arr, target-arr[ind], dp)
+        notpick = self.rec(ind-1, arr, target, dp)
+        
+        dp[ind][target] = pick or notpick
+        return dp[ind][target]
+        
+
+        
+    def isSubsetSum (self, N, arr, sum):
+        # code here 
+        dp = [[-1 ] * (sum+1) for _ in range(N)]
+        return self.rec(N-1, arr, sum, dp)

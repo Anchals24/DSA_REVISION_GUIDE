@@ -1,0 +1,47 @@
+
+"""
+Given a rod of length N inches and an array of prices, price[]. price[i] denotes the value of a piece of length i. Determine the maximum value obtainable by cutting up the rod and selling the pieces.
+
+Note: Consider 1-based indexing.
+
+Example 1:
+
+Input:
+N = 8
+Price[] = {1, 5, 8, 9, 10, 17, 17, 20}
+Output:
+22
+Explanation:
+The maximum obtainable value is 22 by 
+cutting in two pieces of lengths 2 and 
+6, i.e., 5+17=22.
+
+"""
+
+
+class Solution:
+    
+    #price = val, length = weight, W = Wbag, n = size of arr
+    
+    def unboundedknap(self, price, W, n, DP):
+        if n == 0 or W == 0:
+            return 0
+        if DP[n][W] != -1:
+            return DP[n][W]
+        if n <= W:
+            DP[n][W] = max(price[n-1] + self.unboundedknap(price, W-n, n, DP), self.unboundedknap(price, W, n-1, DP))
+        else:
+            DP[n][W] = self.unboundedknap(price, W, n-1, DP)
+        return DP[n][W]
+            
+        
+    
+    def cutRod(self, price, n):
+        #WB, Items , N, Price
+        #n, 1-n, len(price), price 
+        #code here
+        DP = []
+        for i in range(n+1):
+            col = [-1] * (n+1)
+            DP.append(col)
+        return self.unboundedknap(price, n, n, DP)

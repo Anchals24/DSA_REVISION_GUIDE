@@ -1,0 +1,44 @@
+"""
+Given a string s, find the longest palindromic subsequence's length in s.
+
+A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements.
+
+Example 1:
+
+Input: s = "bbbab"
+Output: 4
+Explanation: One possible longest palindromic subsequence is "bbbb".
+
+"""
+
+class Solution:
+
+    def lcs(self, s1, s2):
+        ind1 = len(s1)
+        ind2 = len(s2)
+
+        dp = []
+        for i in range(ind1 + 1):
+            dp.append([0] * (ind2 + 1))
+
+        for i in range(ind1 + 1):
+            dp[i][0] = 0
+        
+        for j in range(ind2 + 1):
+            dp[0][j] = 0
+
+        for in1 in range(1, ind1+1):
+            for in2 in range(1, ind2 + 1):
+                if s1[in1 -1 ] == s2[in2-1]:
+                    dp[in1][in2] = 1 + dp[in1-1][in2-1]
+                else:
+                    dp[in1][in2] = 0 + max (dp[in1-1][in2], dp[in1][in2-1])
+        return dp [ind1][ind2]
+
+    def longestPalindromeSubseq(self, s: str) -> int:
+        newS = ""
+        for i in range(len(s)-1, -1, -1):
+            newS += s[i]
+        return self.lcs(s, newS)
+        
+        

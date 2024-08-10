@@ -1,0 +1,62 @@
+"""
+You have been given an N*M matrix filled with integer numbers, find the maximum sum that can be obtained from a path starting from any cell in the first row to any cell in the last row.
+
+From a cell in a row, you can move to another cell directly below that row, or diagonally below left or right. So from a particular cell (row, col), we can move in three directions i.e.
+
+Down: (row+1,col)
+Down left diagonal: (row+1,col-1)
+Down right diagonal: (row+1, col+1)
+
+"""
+
+def rec(i, j, matrix, col, dp):
+    if j >= col or j < 0:
+        return float('-inf')
+    if dp[i][j] != -1:
+        return dp[i][j]
+    if i == 0:
+        return matrix[0][j]
+    up = matrix[i][j] + rec(i-1, j, matrix, col, dp)
+    leftDig = matrix[i][j] + rec(i-1, j-1, matrix, col, dp)
+    rightDig = matrix[i][j] + rec(i-1, j+1, matrix, col, dp)
+    dp[i][j] = max(up, leftDig, rightDig)
+    return dp[i][j]
+
+def getMaxPathSum(matrix):
+    row = len(matrix)
+    col = len(matrix[0])
+    dp = []
+    for i in range(row):
+        dp.append([-1] * col)
+    maxi = float('-inf')
+    for j in range(col):
+        pathSum = rec(row-1, j, matrix, col, dp)
+        maxi = max(maxi, pathSum)
+    return maxi
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,42 @@
+"""
+You are given two strings s1 and s2. Your task is to find the length of the longest common substring among the given strings.
+
+Examples:
+
+Input: s1 = "ABCDGH", s2 = "ACDGHR"
+Output: 4
+Explanation: The longest common substring is "CDGH" which has length 4.
+
+"""
+class Solution:
+    def longestCommonSubstr(self, S1, S2, n, m):
+        # code here
+        DP = []
+        for i in range(n+1):
+            col = [-1] * (m+1)
+            DP.append(col)
+            
+        #initialization
+        #setting first row as zero
+        for j in range(m+1):
+            DP[0][j] = 0
+        #now, setting first col as zero
+        for i in range(n+1):
+            DP[i][0] = 0
+        
+        #case1: when both the ele are same
+        #7 * 7
+        for i in range(1, n+1):
+            for j in range(1, m+1):
+                if S1[i-1] == S2[j-1]:
+                    DP[i][j] = 1 + DP[i-1][j-1]
+                
+                else: 
+                    DP[i][j] = 0
+        
+        maxi = -99999999999999999
+        for i in range(n+1):
+            for j in range(m+1):
+                if DP[i][j] > maxi:
+                    maxi = DP[i][j]
+        return maxi

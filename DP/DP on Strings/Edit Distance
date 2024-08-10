@@ -1,0 +1,41 @@
+"""
+Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.
+
+You have the following three operations permitted on a word:
+
+Insert a character
+Delete a character
+Replace a character
+ 
+
+Example 1:
+
+Input: word1 = "horse", word2 = "ros"
+Output: 3
+Explanation: 
+horse -> rorse (replace 'h' with 'r')
+rorse -> rose (remove 'r')
+rose -> ros (remove 'e')
+
+"""
+
+class Solution:
+    def rec(self, ind1, ind2, s1, s2, dp):
+        #base cases
+        if ind1 < 0:
+            return ind2 + 1
+        if ind2 < 0:
+            return ind1 + 1
+        if dp[ind1][ind2] != -1:
+            return dp[ind1][ind2]
+        if s1[ind1] == s2[ind2]:
+            dp[ind1][ind2] = self.rec(ind1-1, ind2-1, s1, s2, dp)
+        else:
+            dp[ind1][ind2] = min (1+ self.rec(ind1-1, ind2, s1, s2, dp), 1+ self.rec(ind1, ind2-1, s1, s2, dp)  , 1+ self.rec(ind1-1, ind2-1, s1, s2, dp))
+        return dp[ind1][ind2]
+        
+    def minDistance(self, word1: str, word2: str) -> int:
+        n , m = len(word1) , len(word2)
+        dp = [[-1 for i in range(m)] for j in range(n)]
+        return self.rec(n-1, m-1, word1, word2, dp)
+        

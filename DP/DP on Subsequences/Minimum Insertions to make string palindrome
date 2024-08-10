@@ -1,0 +1,50 @@
+"""
+Given a string s. In one step you can insert any character at any index of the string.
+
+Return the minimum number of steps to make s palindrome.
+
+A Palindrome String is one that reads the same backward as well as forward.
+
+Example 1:
+
+Input: s = "zzazz"
+Output: 0
+Explanation: The string "zzazz" is already palindrome we do not need any insertions.
+
+"""
+
+class Solution:
+
+    def longestPalindromicSubsequence(self, s1, s2):
+        lenS1 = len(s1)
+        lenS2 = len(s2)
+
+        dp = []
+        for i in range(lenS1 + 1):
+            dp.append([0] * (lenS2 + 1))
+        
+        for i in range(lenS1 + 1):
+            dp[i][0] = 0
+    
+        for j in range(lenS2 + 1):
+            dp[0][j] = 0
+
+        for ind1 in range(1, lenS1 + 1):
+            for ind2 in range(1, lenS2 + 1):
+                if s1[ind1-1] == s2[ind2-1]:
+                    dp[ind1][ind2] = 1+ dp[ind1-1][ind2-1]
+                else:
+                    dp[ind1][ind2] = 0 + max(dp[ind1-1][ind2], dp[ind1][ind2-1])
+        
+        return dp[lenS1][lenS2]
+                
+
+    def minInsertions(self, s: str) -> int:
+        newS = ""
+        for i in range(len(s)-1, -1, -1):
+            newS += s[i]
+        
+        lps = self.longestPalindromicSubsequence(s, newS)
+
+        return (len(s) - lps)
+        

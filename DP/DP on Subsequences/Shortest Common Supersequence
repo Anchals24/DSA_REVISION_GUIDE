@@ -1,0 +1,65 @@
+"""
+Given two strings str1 and str2, return the shortest string that has both str1 and str2 as subsequences. If there are multiple valid strings, return any of them.
+A string s is a subsequence of string t if deleting some number of characters from t (possibly 0) results in the string s.
+
+Example 1:
+
+Input: str1 = "abac", str2 = "cab"
+Output: "cabac"
+Explanation: 
+str1 = "abac" is a subsequence of "cabac" because we can delete the first "c".
+str2 = "cab" is a subsequence of "cabac" because we can delete the last "ac".
+The answer provided is the shortest such string that satisfies these properties.
+
+"""
+
+class Solution:
+    def shortestCommonSupersequence(self, str1: str, str2: str) -> str:
+        text1 = str1
+        text2 = str2
+        lenS1 = len(text1)
+        lenS2 = len(text2)
+        dp = []
+        for l in range(lenS1 + 1):
+            dp.append([0] * (lenS2 + 1))
+
+        for i in range(lenS1 +1):
+            dp[i][0] = 0
+        for j in range(lenS2 +1):
+            dp[0][j] = 0
+
+        for ind1 in range(1, lenS1 + 1):
+            for ind2 in range(1, lenS2 + 1):
+                if text1[ind1-1] == text2[ind2-1]:
+                    dp[ind1][ind2] = 1 + dp[ind1-1][ind2-1]
+                else:
+                    dp[ind1][ind2] = 0 + max(dp[ind1-1][ind2], dp[ind1][ind2-1])
+        
+        i , j = lenS1 , lenS2
+        ans1 = ""
+        while i > 0 and j > 0:
+            if text1[i-1] == text2[j-1]:
+                ans1 += text1[i-1]
+                i -= 1
+                j -= 1
+            elif dp[i-1][j] > dp[i][j-1]:
+                ans1 += text1[i-1]
+                i -= 1
+            else: 
+                ans1 += text2[j-1]
+                j -= 1
+
+        while i > 0:
+            ans1 += text1[i-1]
+            i -= 1
+        while j > 0:
+            ans1 += text2[j-1]
+            j -= 1
+        finalans = ""
+        for i in range(len(ans1)-1, -1, -1):
+            finalans += ans1[i]
+        return finalans
+
+
+
+        

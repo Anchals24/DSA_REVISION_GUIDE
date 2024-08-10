@@ -1,0 +1,51 @@
+"""
+You are given an array prices where prices[i] is the price of a given stock on the ith day, and an integer fee representing a transaction fee.
+
+Find the maximum profit you can achieve. You may complete as many transactions as you like, but you need to pay the transaction fee for each transaction.
+
+Note:
+
+You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
+The transaction fee is only charged once for each stock purchase and sale.
+ 
+
+Example 1:
+
+Input: prices = [1,3,2,8,4,9], fee = 2
+Output: 8
+Explanation: The maximum profit can be achieved by:
+- Buying at prices[0] = 1
+- Selling at prices[3] = 8
+- Buying at prices[4] = 4
+- Selling at prices[5] = 9
+The total profit is ((8 - 1) - 2) + ((9 - 4) - 2) = 8.
+
+"""
+
+from typing import List
+
+class Solution:
+    def rec(self, ind, state, prices, n, dp, fee):
+        if ind == n:
+            return 0
+        #sell state = 0, buy state = 1
+        #buy
+        if dp[ind][state] != -1:
+            return dp[ind][state]
+        profit = 0
+        if state == 0: #when you can buy a stock
+            profit = max(- prices[ind] + self.rec(ind+1, 1, prices, n, dp, fee) , 0 + self.rec(ind+1, 0, prices, n, dp, fee))
+        #sell
+        elif state == 1: #when you can sell a stock
+            profit = max((prices[ind] - fee + self.rec(ind+1, 0, prices, n, dp, fee)) , (0+ self.rec(ind+1, 1, prices, n, dp, fee)))
+        dp[ind][state] = profit
+        return dp[ind][state]
+
+    def maxProfit(self, prices: List[int], fee: int) -> int:
+
+        l = len(prices)
+        dp = [[-1 for _ in range(2)] for _ in range(l)]
+        if l == 0:
+            return 0
+        return self.rec(0, 0, prices, l, dp ,fee)
+        

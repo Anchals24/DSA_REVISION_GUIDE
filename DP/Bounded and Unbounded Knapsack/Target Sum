@@ -1,0 +1,64 @@
+"""
+You are given an integer array nums and an integer target.
+
+You want to build an expression out of nums by adding one of the symbols '+' and '-' before each integer in nums and then concatenate all the integers.
+
+For example, if nums = [2, 1], you can add a '+' before 2 and a '-' before 1 and concatenate them to build the expression "+2-1".
+Return the number of different expressions that you can build, which evaluates to target.
+
+ 
+
+Example 1:
+
+Input: nums = [1,1,1,1,1], target = 3
+Output: 5
+Explanation: There are 5 ways to assign symbols to make the sum of nums be target 3.
+-1 + 1 + 1 + 1 + 1 = 3
++1 - 1 + 1 + 1 + 1 = 3
++1 + 1 - 1 + 1 + 1 = 3
++1 + 1 + 1 - 1 + 1 = 3
++1 + 1 + 1 + 1 - 1 = 3
+
+"""
+
+
+from typing import List
+
+class Solution:
+    def countOfSubsets(self, ind, nums, target, dp):
+        if ind == 0:
+            if target == 0 and nums[0] == 0:
+                return 2
+            if target == 0 or nums[0] == target:
+                return 1
+            return 0
+        if dp[ind][target] != -1:
+            return dp[ind][target] 
+        notInclude = self.countOfSubsets(ind-1, nums, target, dp)
+        include = 0
+        if target >= nums[ind]:
+            include = self.countOfSubsets(ind-1, nums, target-nums[ind],dp)
+        dp[ind][target] = (notInclude + include) 
+        return dp[ind][target] 
+
+    def countPartitions(self, n, d, arr) -> int:
+    # write your code here
+        totalSum = 0
+        for ele in arr:
+            totalSum += ele
+        diff = totalSum - d
+        if diff < 0:
+            return 0
+        if diff % 2 != 0:
+            return 0
+        target = diff // 2
+        dp = []
+        for i in range(n):
+            dp.append([-1] * (target+1))
+        return self.countOfSubsets(n-1, arr, target, dp)
+
+    def findTargetSumWays(self, nums: List[int], target: int) -> int:
+        n = len(nums)
+        return self.countPartitions(n, target, nums)
+
+        

@@ -1,0 +1,54 @@
+
+"""
+You are given an integer array nums of 2 * n integers. You need to partition nums into two arrays of length n to minimize the absolute difference of the sums of the arrays. To partition nums, put each element of nums into one of the two arrays.
+
+Return the minimum possible absolute difference.
+
+Example 1:
+
+Input: nums = [3,9,7,3]
+Output: 2
+Explanation: One optimal partition is: [3,9] and [7,3].
+The absolute difference between the sums of the arrays is abs((3 + 9) - (7 + 3)) = 2.
+
+
+"""
+
+class Solution:
+    def checkSubset(self, arr, DP, K, N):
+        for ind in range(N):
+            DP[ind][0] = True
+        if K >= arr[0]:
+            DP[0][arr[0]] = True
+        for ind in range(1, N):
+            for target in range(1, K+1):
+                notpick = DP[ind-1][target]
+                pick = False
+                if target >= arr[ind]:
+                    pick = DP[ind-1][target-arr[ind]]
+                DP[ind][target] = notpick or pick
+
+    def minimumDifference(self, nums) -> int:
+        N = len(nums)
+        K = 0
+        for n in nums:
+            K += n
+        DP = []
+        for i in range(N):
+            DP.append([False]*(K+1))
+        self.checkSubset(nums, DP, K, N)
+        mini = 1000000000000
+        half = (K+1//2 ) +1 
+        for last_row in range(N-1, N):
+            for summ in range(half):
+                otherhalf = abs(K - summ)
+                mini = min(mini, otherhalf)
+        return mini
+
+
+
+
+
+
+    
+        
